@@ -5,7 +5,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://backend.thelanguagenetwork.co/",
   }),
-  tagTypes: ["Promos", "News", "FAQ", "Stats", "Banner", "Testimonials"],
+  tagTypes: ["Promos", "News", "FAQ", "Stats", "Banner", "Testimonials", "Cofounders", "Login"],
   endpoints: (builder) => ({
     // -----------------------------promo queries-------------------------------
 
@@ -135,6 +135,49 @@ export const api = createApi({
       }),
       invalidatesTags: ["Testimonials"],
     }),
+
+    // ---------------------- co-founders queries -------------------------------
+    getAllCofounders: builder.query({
+      query: ({ id }) =>
+        `api/cofounder/get/${id}`,
+      providesTags: ["Cofounders"],
+    }),
+    addCofounders: builder.mutation({
+      query: (Cofounders) => ({
+        url: `/api/cofounder/create`,
+        method: "POST",
+        body: Cofounders,
+      }),
+      invalidatesTags: ["Cofounders"],
+    }),
+    updateCofounders: builder.mutation({
+      query: ({ id, updatedCofounders }) => ({
+        url: `/api/cofounder/update/${id}`,
+        method: "PUT",
+        body: updatedCofounders,
+      }),
+      invalidatesTags: ["Cofounders"],
+    }),
+    deleteCofounders: builder.mutation({
+      query: (id) => ({
+        url: `/api/cofounder/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cofounders"],
+    }),
+
+    // ---------------------- login queries -------------------------------
+    addUser: builder.mutation({
+      query: (credentials) => ({
+        url: `api/auth/login`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: credentials,
+      }),
+      invalidatesTags: ["Login"],
+    }),
   }),
 });
 
@@ -157,4 +200,9 @@ export const {
   useAddTestimonialMutation,
   useUpdateTestimonialMutation,
   useDeleteTestimonialMutation,
+  useAddCofoundersMutation,
+  useDeleteCofoundersMutation,
+  useGetAllCofoundersQuery,
+  useUpdateCofoundersMutation,
+  useAddUserMutation
 } = api;

@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useAuthRedirect } from '../../helpers/useAuthRedirect';
 
 export default function Home() {
+  useAuthRedirect();
+  
   const initialData = {
     engagement: [
       { title: "Engagement 1", lastUpdated: "2024-05-14" },
