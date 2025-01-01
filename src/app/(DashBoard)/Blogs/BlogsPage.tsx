@@ -4,9 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 
+type Blog = {
+    id: string;
+    title: string;
+    content: string;
+    authorName: string;
+    publishedDate: string;
+    categories: string;
+    language: string;
+    blogImage:string;
+    authorImage:string
 
+  };
+  interface BlogsProps {
+    blogsData: any[]; // Assuming blogsData is an array of blog objects
+    updateHandler: (id: string) => void;
+    deleteHandler: (id: string) => void;
+  }
+  
 
-  const Blogs = ({blogsData:any=[]}) => {
+  const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler })=>{
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,19 +46,17 @@ import { FaArrowRight } from "react-icons/fa";
     // Cleanup event listener on component unmount
     return () => window.removeEventListener("resize", updateIsMobile);
   }, []);
-  const handleUpdate=()=>{
-    console.log("updted")
-   }
-   const handleDelete=()=>{
-    console.log("deleted")
-   }
+ 
  // const descriptionWords = cfdescription.split(" ");
  // const isDescriptionLong = descriptionWords.length > 20;
 //const blogsData:any=[]
   return (
      <div className="flex flex-col justify-center items-center p-8 gap-y-10">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-6">List of Blogs</h1>
+
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {blogsData?.length>0 && blogsData.map((article:any) => (
+           
+                        {blogsData?.length>0 && blogsData?.map((article:any) => (
                             <div key={article._id} className="bg-white shadow-md">
                                 <Image src={article?.image} alt="Blog" className="w-full h-[400px] object-cover" width={1000} height={500}/>
                                 <div className="p-4">
@@ -56,13 +71,13 @@ import { FaArrowRight } from "react-icons/fa";
                                     <p className="text-xs sm:text-sm text-gray-700 mb-4">{(article.content)}</p>
                                     <div className="flex gap-6 mt-20">
                                         <button
-                                            onClick={handleUpdate}
+                                            onClick={()=>updateHandler(article?._id)}
                                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-600"
                                         >
                                             Update
                                         </button>
                                         <button
-                                             onClick={handleDelete}
+                                             onClick={()=>deleteHandler(article?._id)}
                                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-green-600"
                                         >
                                             Delete
