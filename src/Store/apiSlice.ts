@@ -5,7 +5,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://backend.thelanguagenetwork.co/",
   }),
-  tagTypes: ["Promos", "News", "FAQ", "Stats", "Banner", "Testimonials", "Cofounders", "Login"],
+  tagTypes: ["Promos", "News", "FAQ", "Stats", "Banner", "Testimonials", "Cofounders", "Login","Blogs"],
   endpoints: (builder) => ({
     // -----------------------------promo queries-------------------------------
 
@@ -165,7 +165,36 @@ export const api = createApi({
       }),
       invalidatesTags: ["Cofounders"],
     }),
+    // ----------------------Blogs queries -------------------------------
 
+   getAllBlogs: builder.query({
+      query: ({ id }) =>
+        `/${id}`,
+      providesTags: ["Blogs"],
+    }),
+    addBlogs: builder.mutation({
+      query: (Blogs) => ({
+        url: `/api/blog/create`,
+        method: "POST",
+        body: Blogs,
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
+    updateBlogs: builder.mutation({
+      query: ({ id, updatedBlogs }) => ({
+        url: `/api/blog/update/${id}`,
+        method: "PATCH",
+        body: updatedBlogs,
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
+    deleteBlogs: builder.mutation({
+      query: (id) => ({
+        url: `/api/blog/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
     // ---------------------- login queries -------------------------------
     addUser: builder.mutation({
       query: (credentials) => ({
@@ -204,5 +233,9 @@ export const {
   useDeleteCofoundersMutation,
   useGetAllCofoundersQuery,
   useUpdateCofoundersMutation,
-  useAddUserMutation
+  useAddUserMutation,
+  useAddBlogsMutation,
+  useDeleteBlogsMutation,
+  useGetAllBlogsQuery,
+  useUpdateBlogsMutation,
 } = api;
