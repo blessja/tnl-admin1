@@ -6,9 +6,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 
 
-  const Blogs = ({
-
-}) => {
+  const Blogs = ({blogsData:any=[]}) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -39,7 +37,7 @@ import { FaArrowRight } from "react-icons/fa";
    }
  // const descriptionWords = cfdescription.split(" ");
  // const isDescriptionLong = descriptionWords.length > 20;
-const blogsData:any=[]
+//const blogsData:any=[]
   return (
      <div className="flex flex-col justify-center items-center p-8 gap-y-10">
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">

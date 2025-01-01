@@ -166,10 +166,10 @@ export const api = createApi({
       invalidatesTags: ["Cofounders"],
     }),
     // ----------------------Blogs queries -------------------------------
-
+   
    getAllBlogs: builder.query({
-      query: ({ id }) =>
-        `/${id}`,
+      query: ({language}) =>
+        `/api/blog/get-all?language=${language}`,
       providesTags: ["Blogs"],
     }),
     addBlogs: builder.mutation({

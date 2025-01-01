@@ -2,7 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import RichTextEditor from "@/components/RichTextEditor";
 import Blogs from "./BlogsPage";
-import { useAddBlogsMutation } from "@/Store/apiSlice";
+import { useAddBlogsMutation, useDeleteBlogsMutation,
+  useGetAllBlogsQuery,
+  useUpdateBlogsMutation} from "@/Store/apiSlice";
 const Page = () => {
   const categories = [  "Cultural Insight",
     "Festival & Celebration",
@@ -21,7 +23,8 @@ const Page = () => {
     "Korean",
     "Japanese",
   ];
-
+ 
+ 
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const imageRef = useRef(null);
@@ -38,7 +41,7 @@ const Page = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   
   const [addBlogs, { isLoading: isAdding }] = useAddBlogsMutation();
-
+  const [blogsData,setBlogsData]=useState([])
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(event.target.value); 
   };
@@ -46,6 +49,7 @@ const Page = () => {
     setSelectedDate(event.target.value);
   };
 
+  
   const handleCategoryToggle = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategories(event.target.value)
 
@@ -112,6 +116,22 @@ const Page = () => {
     setIsLoading(false);
   }
 
+//  function fetchdata(){
+//     useEffect(()=>{
+//       const {data}= useGetAllBlogsQuery({language:selectedLanguage})
+     
+//       console.log("the bbb",data)
+//      },[]) 
+    
+//   }
+//   fetchdata()
+  const {data}= useGetAllBlogsQuery({language:selectedLanguage})
+  //setBlogsData()
+  console.log("the bbb",data)
+  // setBlogsData(data)
+
+// const handleUpdate=(e)=async()=>{}
+// const handleDelete=()=async()=>{}
 
 return (
   <div className="p-4 ml-10">
@@ -258,7 +278,14 @@ return (
         Create
       </button>
     </div>
-    <Blogs />
+   
+     <Blogs 
+   // blogsData={blogsData}
+        
+        // deleteHandler={handleDelete}
+        // updateHandler={handleUpdate}
+        
+        />
   </div>
 );
 };
