@@ -180,11 +180,12 @@ export const api = createApi({
       }),
       invalidatesTags: ["Blogs"],
     }),
+   
     updateBlogs: builder.mutation({
-      query: ({ id, updatedBlogs }) => ({
-        url: `/api/blog/update/${id}`,
+      query: ({ id, formData }) => ({
+        url: `api/blog/update/${id}`,
         method: "PATCH",
-        body: updatedBlogs,
+        body: formData,
       }),
       invalidatesTags: ["Blogs"],
     }),

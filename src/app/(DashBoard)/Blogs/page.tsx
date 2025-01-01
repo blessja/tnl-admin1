@@ -6,6 +6,7 @@ import {
   useAddBlogsMutation,
   useDeleteBlogsMutation,
   useGetAllBlogsQuery,
+  useUpdateBlogsMutation
 } from "@/Store/apiSlice";
 
 const Page = () => {
@@ -29,7 +30,7 @@ const Page = () => {
     "Japanese",
   ];
 
-  const [isLoading, setIsLoading] = useState(false);
+
   const [image, setImage] = useState<File | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [blogContent, setBlogContent] = useState("");
@@ -39,17 +40,15 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string>("Cultural Insight");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
-  const [blogsData, setBlogsData] = useState<any[]>([]);
   const [addBlogs] = useAddBlogsMutation();
-  const { data } = useGetAllBlogsQuery({ language: selectedLanguage });
+  const { data:blogsData } = useGetAllBlogsQuery({ language: selectedLanguage });
+  const [updateBlogs] = useUpdateBlogsMutation();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const[deleteQuery]=useDeleteBlogsMutation();
    
-   useEffect(() => {
-      if (data) {
-        setBlogsData(data);
-      }
-    }, [data]);
+ 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(event.target.value);
   };
@@ -62,7 +61,6 @@ const Page = () => {
   const showPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
   
-
 
     if (file) {
       const reader = new FileReader();
@@ -122,15 +120,44 @@ const Page = () => {
     }
     setIsLoading(false);
   };
-   const handleUpdate = (id: string) => {
-   
-    console.log(`Update blog with ID: ${id}`);
+ 
+  const handleUpdate = async (id: string, updatedData: any) => {
+    setIsLoading(true);
+    try {
+      
+      const formData = new FormData();
+      formData.append("title", updatedData.title || "");
+      formData.append("slug", updatedData.slug || updatedData.title || "");
+      formData.append("language", updatedData.language || "");
+      formData.append("content", updatedData.content || "");
+      formData.append("authorName", updatedData.author?.name || "");
+      formData.append("categories", updatedData.categories || "");
+      formData.append("publishedDate", updatedData.publishedDate || "");
+  
+      if (updatedData.image) {
+        formData.append("blogImage", updatedData.image as any);
+      }
+      if (updatedData.author.profileImage) {
+        formData.append("authorImage", updatedData.author.profileImage as any);
+      }
+  
+      // Debugging: log the FormData key-value pairs
+      formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
+  
+      const response = await updateBlogs({ id, formData }).unwrap();
+      console.log("Blog updated:", response);
+    } catch (error) {
+      console.error("Error updating blog:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
-
+  
   const handleDelete = async(id: string) => {
     try{
       const response=await deleteQuery(id).unwrap();
-      console.log("the obj deleted ",response)
 
     } catch(error){
       console.log("the error is",error)
@@ -251,7 +278,7 @@ const Page = () => {
        
       </div>
       <Blogs blogsData={blogsData}  
-       updateHandler={handleUpdate}
+        updateHandler={handleUpdate}
         deleteHandler={handleDelete}/>
     </div>
   );
