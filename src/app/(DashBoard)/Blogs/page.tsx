@@ -4,6 +4,7 @@ import RichTextEditor from "@/components/RichTextEditor";
 import Blogs from "./BlogsPage";
 import {
   useAddBlogsMutation,
+  useDeleteBlogsMutation,
   useGetAllBlogsQuery,
 } from "@/Store/apiSlice";
 
@@ -42,11 +43,11 @@ const Page = () => {
   const [addBlogs] = useAddBlogsMutation();
   const { data } = useGetAllBlogsQuery({ language: selectedLanguage });
 
-  
-    // Update local state whenever data changes
+  const[deleteQuery]=useDeleteBlogsMutation();
+   
    useEffect(() => {
       if (data) {
-        setBlogsData(data); // Assuming `data` is an array of blogs
+        setBlogsData(data);
       }
     }, [data]);
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -122,12 +123,19 @@ const Page = () => {
     setIsLoading(false);
   };
    const handleUpdate = (id: string) => {
-    // Logic to handle updating a blog
+   
     console.log(`Update blog with ID: ${id}`);
   };
 
-  const handleDelete = (id: string) => {
-    // Logic to handle deleting a blog
+  const handleDelete = async(id: string) => {
+    try{
+      const response=await deleteQuery(id).unwrap();
+      console.log("the obj deleted ",response)
+
+    } catch(error){
+      console.log("the error is",error)
+    }
+   
     console.log(`Delete blog with ID: ${id}`);
   };
 

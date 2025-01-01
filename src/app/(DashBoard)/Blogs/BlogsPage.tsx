@@ -17,7 +17,7 @@ type Blog = {
 
   };
   interface BlogsProps {
-    blogsData: any[]; // Assuming blogsData is an array of blog objects
+    blogsData: any[]; 
     updateHandler: (id: string) => void;
     deleteHandler: (id: string) => void;
   }
@@ -47,9 +47,7 @@ type Blog = {
     return () => window.removeEventListener("resize", updateIsMobile);
   }, []);
  
- // const descriptionWords = cfdescription.split(" ");
- // const isDescriptionLong = descriptionWords.length > 20;
-//const blogsData:any=[]
+
   return (
      <div className="flex flex-col justify-center items-center p-8 gap-y-10">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-6">List of Blogs</h1>
