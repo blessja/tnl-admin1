@@ -7,7 +7,7 @@ import Modal from "./Modal";
 interface Author {
 
   name: string;
-  profileImage:string
+  profileImage:string|File;
 }
 
 interface Blog {
@@ -18,7 +18,7 @@ interface Blog {
   publishedDate: string;
   categories: string;
   language: string;
-  image: string;
+  image: string|File;
 }
 
 
@@ -31,17 +31,8 @@ interface BlogsProps {
 const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const updateIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+ 
 
-    updateIsMobile();
-    window.addEventListener("resize", updateIsMobile);
-    return () => window.removeEventListener("resize", updateIsMobile);
-  }, []);
 
   const handleOpenModal = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -59,28 +50,47 @@ const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler }
     }
     handleCloseModal();
   };
+  const getImageSrc = (image: string | File) => {
+    if (typeof image === "string") {
+      return image;
+    }
+    if (image instanceof File) {
+      return URL.createObjectURL(image); 
+    }
+    return "";
+  };
 
   return (
     <div className="flex flex-col justify-center items-center p-8 gap-y-10">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-6">List of Blogs</h1>
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {blogsData?.length > 0 &&
           blogsData.map((article: Blog) => (
             <div key={article._id} className="bg-white shadow-md">
-              <Image
-                src={article.image}
-                alt="Blog"
-                className="w-full h-[400px] object-cover"
-                width={1000}
-                height={500}
-              />
+                
+               {article.image && (
+                <Image
+                  src={getImageSrc(article.image)}
+                  alt="Blog"
+                  className="w-full h-[300px] object-cover"
+                  width={500}
+                  height={50}
+              
+                />
+              )}
               <div className="p-4">
                 <div className="flex items-center mb-4">
-                  <img
-                    src={article.author.profileImage}
-                    alt="Author"
-                    className="w-10 sm:w-12 h-10 sm:h-12 rounded-full mr-4"
-                  />
+                {article.author.profileImage && (
+                <Image
+                  src={getImageSrc(article.author.profileImage)}
+                  alt="Author"
+                  width={150}
+                  height={50}
+                 className="w-10 sm:w-12 h-10 sm:h-12 rounded-full mr-4"
+             
+
+                />
+              )}
                   <div>
                     <h3 className="text-xs sm:text-sm font-semibold">{article.author.name}</h3>
                     <p className="text-xs text-gray-500">{article.publishedDate}</p>

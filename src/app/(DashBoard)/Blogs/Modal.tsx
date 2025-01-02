@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 interface Author {
   name: string;
-  profileImage: string;
+  profileImage: string|File;
 }
 
 interface Blog {
@@ -13,7 +13,7 @@ interface Blog {
   publishedDate: string;
   categories: string;
   language: string;
-  image: string;
+  image: string|File;
 }
 
 interface ModalProps {
@@ -69,8 +69,6 @@ const Modal: React.FC<ModalProps> = ({ blog, onClose, onSubmit }) => {
   const handleBlogImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     const file = files?.[0] || null;
-    console.log("name")
-
   
       setUpdatedBlog((prevBlog) => ({
         ...prevBlog,

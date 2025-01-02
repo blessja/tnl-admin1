@@ -40,13 +40,13 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string>("Cultural Insight");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
-  const [addBlogs] = useAddBlogsMutation();
+  const [addBlogs,] = useAddBlogsMutation();
   const { data:blogsData } = useGetAllBlogsQuery({ language: selectedLanguage });
-  const [updateBlogs] = useUpdateBlogsMutation();
+  const [updateBlogs,] = useUpdateBlogsMutation();
   const [isLoading, setIsLoading] = useState(false);
 
 
-  const[deleteQuery]=useDeleteBlogsMutation();
+  const[deleteQuery,{ isLoading: isDelteing }]=useDeleteBlogsMutation();
    
  
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -141,10 +141,7 @@ const Page = () => {
         formData.append("authorImage", updatedData.author.profileImage as any);
       }
   
-      // Debugging: log the FormData key-value pairs
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
+     
   
       const response = await updateBlogs({ id, formData }).unwrap();
       console.log("Blog updated:", response);
@@ -165,7 +162,13 @@ const Page = () => {
    
     console.log(`Delete blog with ID: ${id}`);
   };
-
+  if (isLoading ) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="loader">Loading...</div>{" "}
+      </div>
+    );
+  }
   return (
     <div className="flex justify-center  flex-col items-center min-h-screen">
       <div className="w-full max-w-3xl bg-white  rounded-lg p-6">
