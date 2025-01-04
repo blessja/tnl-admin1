@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
-
+import DOMPurify from "dompurify";
 
 interface Author {
 
@@ -31,8 +31,6 @@ interface BlogsProps {
 const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
- 
-
 
   const handleOpenModal = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -59,13 +57,18 @@ const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler }
     }
     return "";
   };
+  
+  const sanitizeAndRender = (content:any) => {
+    const cleanContent = DOMPurify.sanitize(content);
+    return <div dangerouslySetInnerHTML={{ __html: cleanContent }} />;
+  };
 
   return (
     <div className="flex flex-col justify-center items-center p-8 gap-y-10">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-6">List of Blogs</h1>
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {blogsData?.length > 0 &&
-          blogsData.map((article: Blog) => (
+          blogsData?.map((article: Blog) => (
             <div key={article._id} className="bg-white shadow-md">
                 
                {article.image && (
@@ -96,8 +99,8 @@ const Blogs: React.FC<BlogsProps> = ({ blogsData, updateHandler, deleteHandler }
                     <p className="text-xs text-gray-500">{article.publishedDate}</p>
                   </div>
                 </div>
-                <h4 className="text-base sm:text-lg font-semibold mb-2">{article.title}</h4>
-                <p className="text-xs sm:text-sm text-gray-700 mb-4">{article.content}</p>
+                <h4 className="text-base sm:text-lg font-semibold mb-2">{article?.title}</h4>
+                <p className="text-xs sm:text-sm text-gray-700 mb-4">  {sanitizeAndRender(article?.content)}</p>
                 <div className="flex gap-6 mt-20">
                   <button
                     onClick={() => handleOpenModal(article)}
