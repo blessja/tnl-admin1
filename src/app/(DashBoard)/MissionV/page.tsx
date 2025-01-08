@@ -1,15 +1,25 @@
-"use client"
+"use client";
+
 import { useState, useEffect } from "react";
 import Comp from "./MissionVission";
 
 const Page = () => {
-  // Load saved data from localStorage if it exists
-  const [missionText, setMissionText] = useState(() => localStorage.getItem("missionText") || "");
-  const [visionText, setVisionText] = useState(() => localStorage.getItem("visionText") || "");
+  const [missionText, setMissionText] = useState("");
+  const [visionText, setVisionText] = useState("");
 
   // Temporary states for input fields
-  const [tempMissionText, setTempMissionText] = useState(missionText);
-  const [tempVisionText, setTempVisionText] = useState(visionText);
+  const [tempMissionText, setTempMissionText] = useState("");
+  const [tempVisionText, setTempVisionText] = useState("");
+
+  // Load saved data from localStorage when the component mounts
+  useEffect(() => {
+    const savedMissionText = localStorage.getItem("missionText") || "";
+    const savedVisionText = localStorage.getItem("visionText") || "";
+    setMissionText(savedMissionText);
+    setVisionText(savedVisionText);
+    setTempMissionText(savedMissionText);
+    setTempVisionText(savedVisionText);
+  }, []);
 
   // Handler functions for input changes
   const handleMissionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +46,9 @@ const Page = () => {
         {/* Input field for mission text */}
         <div>
           <div className="flex flex-col">
-            <label className="block text-gray-700 font-bold mb-2">Mission Text:</label>
+            <label className="block text-gray-700 font-bold mb-2">
+              Mission Text:
+            </label>
             <input
               type="text"
               name="mission"
@@ -59,7 +71,9 @@ const Page = () => {
         {/* Input field for vision text */}
         <div>
           <div className="flex flex-col">
-            <label className="block text-gray-700 font-bold mb-2">Vision Text:</label>
+            <label className="block text-gray-700 font-bold mb-2">
+              Vision Text:
+            </label>
             <input
               type="text"
               name="vision"
